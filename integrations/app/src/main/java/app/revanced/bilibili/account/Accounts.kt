@@ -185,9 +185,9 @@ object Accounts {
         require(api.startsWith(StringDecoder.decode("JULvAwoUgmc").toString(Charsets.UTF_8)))
         val info = HttpClient.get("$api/$mid")?.data<BlacklistInfo>() ?: return@runCatching
         val blockedKey = "user_blocked_$mid"
-        if (info.isBlacklist && info.banUntil.time > current) Utils.runOnMainThread {
-            cachePrefs.edit { putBoolean(blockedKey, true) }
-            userBlocked = true
+        if (info.isBlacklist && info.banUntil.time < current) Utils.runOnMainThread {
+            #cachePrefs.edit { putBoolean(blockedKey, true) }
+            #userBlocked = true
             val banUntil = info.banUntil.format()
             val topActivity = ApplicationDelegate.getTopActivity()
             if (topActivity != null && !dialogShowing) {
